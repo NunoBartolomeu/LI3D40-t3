@@ -1,4 +1,4 @@
-/*package Modelo;
+package Modelo;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -77,11 +77,11 @@ public class Querys {
             String estado = key.nextLine();
             pstmt.setInt(3, estado.charAt(0)-'0');
 
-            
+            /*
             System.out.print("Inserir dtaquisicao do activo: ");
             String dtaquisicao = key.nextLine();
             pstmt.setDate(4, date(dtaquisicao));
-
+*/
             
             System.out.print("Inserir modelo do activo: ");
             String modelo = key.nextLine();
@@ -189,5 +189,41 @@ public class Querys {
             //Nothing to do. The option was not a valid one. Read another.
         }
     }
+
+    private void custoDeUmActivo() {
+        final String dtaquisicaoQuery = "select dtaquisicao from activo where activo=?;";
+        final String valorComercialQuery = "select valor from vcomercial where activo=? and dtvcomercial=?;";
+        final String valorDasIntervencoesQuery = "select valcusto from intervencao where activo=? and dtvcomercial=?;";
+        
+        try {
+            Connection conn = getCon();
+            PreparedStatement dtaquisicaoPS = conn.prepareStatement(dtaquisicaoQuery);
+            
+            System.out.println("Id do activo: ");
+            java.util.Scanner scanner = new Scanner(System.in);
+            String id = scanner.nextLine();
+            dtaquisicaoPS.setString(1, id);
+            Date dtvComercial = dtaquisicaoPS.executeQuery().getDate("dtvcomercial");
+
+            PreparedStatement valorComercialPS = conn.prepareStatement(valorComercialQuery);
+            valorComercialPS.setString(1, id);
+            valorComercialPS.setDate(2, dtvComercial);
+            int valorComercial = valorComercialPS.executeQuery().getInt("valor");
+            
+            
+            PreparedStatement intervencoesPS = conn.prepareStatement(valorDasIntervencoesQuery);
+            intervencoesPS.setString(1, id);
+            ResultSet result = intervencoesPS.executeQuery(); 
+            int valorIntervencoes = 0;
+            while (result.next()) {
+                valorIntervencoes += result.getInt("valcusto");
+            }
+            int total = valorComercial + valorIntervencoes;
+            System.out.println("O activo tem um valor de: " + total + "€");
+        }
+        
+        catch(SQLException err){
+            //Nothing to do. The option was not a valid one. Read another.
+        }
+    }
 }
-*/
