@@ -1,17 +1,21 @@
-/** 
+/*package Modelo;
+
+/* 
 ISEL - DEETC
 Introdução a Sistemas de Informação
 MP,ND, 2014-2022
-*/
+
 
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Scanner;
-import Model;
+import Modelo.Model;
+
 interface DbWorker 
 {
 	void doWork();
 }	
+
 class App
 {
 	private enum Option
@@ -123,12 +127,11 @@ class App
 	--- DO NOT MOVE IN THE CODE ABOVE. JUST HAVE TO IMPLEMENT THE METHODS BELOW ---
 	-------------------------------------------------------------------------------
 	
-	*/
+	
 	
 }
 
-public class Ap3
-{
+public class Ap3{
 	public static void main(String[] args) throws SQLException,Exception
 	{
 		String url =  "jdbc:postgresql://10.62.73.22:5432/?user=test_1&password=test_1&ssl=false";
@@ -137,8 +140,7 @@ public class Ap3
 	}
 }
 
-/* -------------------------------------------------------------------------------- 
-private class Connect {
+public class Connect {
 	private java.sql.Connection con = null;
     private final String url = "jdbc:sqlserver://";
     private final String serverName = "localhost";
@@ -153,7 +155,7 @@ private class Connect {
 
     private java.sql.Connection getConnection() {
         try {
-            con = java.sql.DriverManager.getConnection(url, user, pwd);
+            con = java.sql.DriverManager.getConnection(url, userName, password);
             if (con != null) {
                 System.out.println("Connection Successful!");
             }
@@ -163,7 +165,7 @@ private class Connect {
         }
         return con;
     }
-1
+
     private void closeConnection() {
         try {
             if (con != null) {
@@ -175,5 +177,4 @@ private class Connect {
         }
     }
 }
- --------------------------------------------------------------------------------
- */
+*/

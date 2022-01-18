@@ -1,8 +1,10 @@
+/*package Modelo;
+
 import java.sql.*;
 import java.util.Scanner;
 
 public class Model {
-
+            
     private void printResults(ResultSet rs) throws SQLException {
         final int TAB_SIZE = 8;
         ResultSetMetaData meta = rs.getMetaData();
@@ -34,12 +36,11 @@ public class Model {
     }
 
     private void ListEmployee() {
-        //TODO: Implement
         //System.out.println("ListEmployee()");
-        final String CMDST = "select fname, lname from employee where salary > ?;";
+        final String query = "select fname, lname from employee where salary > ?;";
         try {
             Connection conn = getCon();
-            PreparedStatement pstmt = conn.prepareStatement(CMDST);
+            PreparedStatement pstmt = conn.prepareStatement(query);
             System.out.println("Insert salary");
             java.util.Scanner key = new Scanner(System.in);
             double salary = key.nextDouble();
@@ -48,13 +49,13 @@ public class Model {
 
             // obter os resultados através de um select
             printResults(pstmt.executeQuery());
-        }catch(SQLException err)
-        {
+        }
+        
+        catch(SQLException err){
             //Nothing to do. The option was not a valid one. Read another.
         }
     }
-    private void ListAverageSalary()
-    {
+    private void ListAverageSalary(){
         //TODO: Implement
         System.out.println("ListAverageSalary()");
     }
@@ -69,3 +70,4 @@ public class Model {
         System.out.println("RegisterDependent()");
     }
 }
+*/

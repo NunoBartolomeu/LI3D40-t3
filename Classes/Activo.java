@@ -56,11 +56,10 @@ public class Activo {
     public void get_empresa(int empresa) {this.empresa = empresa;}
     public void get_pessoa(int pessoa) {this.pessoa = pessoa;}
 
-    public static void main(String[] args) {
-        Date julio = new Date();
-        Activo activo = new Activo("f1887", "Ferrari 1887", 0, julio, "87", "Ferrari", "Italy", "f0000", 5, 879, 2);
+    /*public static void main(String[] args) {
+        Activo activo = new Activo("f1887", "Ferrari 1887", 0, , "87", "Ferrari", "Italy", "f0000", 5, 879, 2);
         System.out.println(activo.get_dtaquisicao()); 
         activo.set_id("42");
         System.out.println(activo.get_id());
-    }
+    }*/
 }
