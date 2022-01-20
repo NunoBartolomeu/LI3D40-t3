@@ -18,7 +18,8 @@ public class Intervencao {
     this.noint = noint;
     this.descricao = descricao;
     this.estado = estado;
-    this.dtinicio = dtinicio;
+    if (dtinicio < activo.get_dtaquisicao()) kill;
+    else this.dtinicio = dtinicio;
     this.dtfim = dtfim;
     this.valcusto = valcusto;
     this.activo = activo;
