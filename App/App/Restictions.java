@@ -54,15 +54,21 @@ public class Restictions {
             rs2.next();
 
             conn.setAutoCommit(false);
+            boolean last = false;
 
             while(rs.next()) {
+                if(last) break;
                 System.out.println(rs.getInt("codigo"));
                 int count=0;
 
                 while(rs2.getInt("equipa") == rs.getInt("codigo")) {
                     count++;
-                    if(!rs2.next()) break;
+                    if(!rs2.next()){
+                        last = true;
+                        break;
+                    } 
                 }
+                System.out.println("count "+count);
                 if (count < 2) {
                     //Apagar equipa
                     PreparedStatement ps_apagarEquipa = conn.prepareStatement(query_deleteTeam);
@@ -184,17 +190,20 @@ public class Restictions {
                 
                 ps_dtaquisicao.setString(1, id);
                 ResultSet dtaqui = ps_dtaquisicao.executeQuery();
-                dtaqui.next();
+                if(!dtaqui.next()) continue;
                 java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
 
-                ps_valComer.setDate(1, sqlDate);
+                ps_valComer.setString(1, id);
+                ps_valComer.setDate(2, sqlDate);
                 ResultSet valorC = ps_valComer.executeQuery();
-                valorC.next();
+                if(!valorC.next()) continue;
                 int valorComercial = valorC.getInt("valor");
 
+                System.out.println("valorI");
                 ps_valInter.setString(1, id);
+                System.out.println("valorI1");
                 ResultSet valorI = ps_valInter.executeQuery();
-                valorI.next();
+                if(!valorI.next()) continue;
                 int valIntervencao = valorI.getInt("valcusto");
 
                 if(valIntervencao < valorComercial){
@@ -236,15 +245,16 @@ public class Restictions {
         ResultSet rs = null;
 
         try { 
-            //Get ativos           
+            //Get intervencoes         
             rs = s_intervencao.executeQuery(query_intervencao);
 
             while(rs.next()) {
                 if (rs.getDate("dtfim") != null) {
                     if (!rs.getString("estado").equals("concluido")) {                       
                         PreparedStatement ps_mudarEstado = conn.prepareStatement(query_mudarEstado);
-                        ps_mudarEstado.setString(1, rs.getString("noint"));
+                        ps_mudarEstado.setInt(1, rs.getInt("noint"));
                         ps_mudarEstado.executeUpdate();
+                        System.out.println(ps_mudarEstado);
                     }
                 }
             }
@@ -293,11 +303,11 @@ public class Restictions {
 
                     ps_ativoPai.setString(1, idativoTopo);
                     ResultSet ativoP = ps_ativoPai.executeQuery();
-                    ativoP.next();
-                    String tipoPai = ativoP.getString("tipo");
+                    if(!ativoP.next()) continue;
+                    int tipoPai = ativoP.getInt("tipo");
 
-                    if(tipoPai != rs.getString("tipo")){
-                        ps_updtA.setString(1, ativoP.getString("tipo"));
+                    if(tipoPai != rs.getInt("tipo")){
+                        ps_updtA.setInt(1, ativoP.getInt("tipo"));
                         ps_updtA.setString(2, id);
                         ps_updtA.executeUpdate();
                     }
@@ -351,7 +361,7 @@ public class Restictions {
                 PreparedStatement ps_pessoa = conn.prepareStatement(query_pessoa);
                 ps_pessoa.setInt(1, pessoa);
                 ResultSet rs2 = ps_pessoa.executeQuery();
-                rs2.next();
+                if(!rs2.next()) continue;
                 int equipa = rs2.getInt("equipa");
 
                 System.out.println(" Equipa: " + equipa);
@@ -359,11 +369,11 @@ public class Restictions {
                 //Get all inerventions
                 PreparedStatement ps_integerevencao = conn.prepareStatement(query_integerevencao);
                 ps_integerevencao.setInt(1, equipa);
-                ResultSet rs3 = ps_pessoa.executeQuery();
+                ResultSet rs3 = ps_integerevencao.executeQuery();
                 
                 while (rs3.next()){
                     //Get noint
-                    int noint = rs3.getInt("noint");
+                    int noint = rs3.getInt("integerervencao");
 
                     System.out.println("noint da intervencao: " + noint);
                     
