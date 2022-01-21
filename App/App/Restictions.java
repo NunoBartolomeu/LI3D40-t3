@@ -20,7 +20,7 @@ public class Restictions {
         checkDatas();
         System.out.println("Restrição: Um Activo Nao Pode Ter Um Valor Comercial Antes De Ser Adquirido");
         checkValcusto();
-        System.out.println("Restrição: Custos De Intervenção Não Podem Ser Superiores Ao Custo Comercial De Um Activo Ativo");
+        System.out.println("Restrição: Custos De Intervenção Nao Podem Ser Superiores Ao Custo Comercial De Um Activo Ativo");
         checkDtfim();
         System.out.println("Restriction: Active Interventions Can't Have a End Date");
         activosPaiFilho();
