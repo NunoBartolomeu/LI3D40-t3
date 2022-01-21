@@ -16,11 +16,11 @@ public class Restictions {
 
     public static void runAll() throws SQLException{
         equipasTem2ElmMin();
-        System.out.println("Restriction: Teams Have a Minimum of 2 Elements");
+        System.out.println("Restrição: Equipas Tem De Ter No Minimo 2 Elementos");
         checkDatas();
-        System.out.println("Restriction: A Product Can't Have a Comercial Value Before Being Aquaried");
+        System.out.println("Restrição: Um Activo Nao Pode Ter Um Valor Comercial Antes De Ser Adquirido");
         checkValcusto();
-        System.out.println("Restriction: Interventions Costs May Not Surpass The Comercial Cost of an Active Asset");
+        System.out.println("Restrição: Custos De Intervenção Não Podem Ser Superiores Ao Custo Comercial De Um Activo Ativo");
         checkDtfim();
         System.out.println("Restriction: Active Interventions Can't Have a End Date");
         activosPaiFilho();
