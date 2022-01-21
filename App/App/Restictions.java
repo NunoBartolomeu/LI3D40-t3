@@ -142,20 +142,20 @@ public class Restictions {
         final String query_valComer = "select valor from vcomercial where activo=? and dtvcomercial=?;";
         final String query_valorInter = "select valcusto from intervencao where activo=?;";
         final String query_updtState = "update activo set estado = b'0' where id=?;";
-        final String query_updtDtfim = "update intervencao set estado = 'concluido' and dtfim = CURRENT_DATE where id = ?;";
-
-        //Prepared Statements
-        PreparedStatement ps_ativos = conn.prepareStatement(query_activos);
-        PreparedStatement ps_dtaquisicao = conn.prepareStatement(query_dtaquisicao);
-        PreparedStatement ps_valComer = conn.prepareStatement(query_valComer);
-        PreparedStatement ps_valInter = conn.prepareStatement(query_valorInter); 
-        PreparedStatement ps_updtState = conn.prepareStatement(query_updtState); 
-        PreparedStatement ps_updtDtfim = conn.prepareStatement(query_updtDtfim);   
+        final String query_updtDtfim = "update intervencao set estado = 'concluido' and dtfim = CURRENT_DATE where id = ?;";  
         
         //ResultSet
         ResultSet rs = null;
             
         try {
+
+            //Prepared Statements
+            PreparedStatement ps_ativos = conn.prepareStatement(query_activos);
+            PreparedStatement ps_dtaquisicao = conn.prepareStatement(query_dtaquisicao);
+            PreparedStatement ps_valComer = conn.prepareStatement(query_valComer);
+            PreparedStatement ps_valInter = conn.prepareStatement(query_valorInter); 
+            PreparedStatement ps_updtState = conn.prepareStatement(query_updtState); 
+            PreparedStatement ps_updtDtfim = conn.prepareStatement(query_updtDtfim); 
 
             rs = ps_ativos.executeQuery();
 
@@ -241,8 +241,18 @@ public class Restictions {
         }
     }
 
-    public void activosPaiFilho(){
-        //1º pegar todos os ativos
+    public void activosPaiFilho() throws SQLException{
+        //Connection
+        Connection conn = getCon();
+
+        //Querys
+        final String query_activos = "select * from activo;"; //1º pegar todos os ativos
+        final String query_activoPai = "select * from activo where id=?);";
+        final String query_updtA = "update activo set tipo=? where id=? )";
+
+         //ResultSet
+         ResultSet rs = null;
+
         //um a um ver se:
         //2º id = idactivotopo, se for igual podes passar a frente
         //3º se não for igual:
@@ -250,6 +260,46 @@ public class Restictions {
         //fazer um preparedStatement para o activo pai (... select * from activo where id=rs.getString("idactivotopo"))
         //comparar os dois tipos
         //se for false fazer um novo prepareStatement (update activo set tipo=rs2.getString("tipo") where id=rs.getString("id"))
+        try {
+            //Prepared Statements
+            PreparedStatement ps_ativos = conn.prepareStatement(query_activos);
+            PreparedStatement ps_ativoPai = conn.prepareStatement(query_activoPai);
+            PreparedStatement ps_updtA = conn.prepareStatement(query_updtA);
+
+            rs = ps_ativos.executeQuery();
+
+            while(rs.next()) {
+
+                String id = rs.getString("id");
+                String idativoTopo = rs.getString("idactivotopo");
+
+                if (id != idativoTopo){
+
+                    ps_ativoPai.setString(1, idativoTopo);
+                    ResultSet ativoP = ps_ativoPai.executeQuery();
+                    String tipoPai = ativoP.getString("tipo");
+
+                    if(tipoPai != rs.getString("tipo")){
+                        ps_updtA.setString(1, ativoP.getString("tipo"));
+                        ps_updtA.setString(2, id);
+                        ps_updtA.executeUpdate();
+                    }
+                }
+            }
+        }
+
+        catch(SQLException err){
+            System.out.println("Error detected: ");
+            System.out.println(err);
+        }
+
+        finally{
+            //Close Result Set
+            if (rs != null) rs.close();
+
+            //Close connection
+            if (conn != null) conn.close();
+        }
     }
 
     public void checkGerirNaoIntervir() throws SQLException{        
