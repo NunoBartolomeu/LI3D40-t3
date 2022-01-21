@@ -16,17 +16,17 @@ public class Restictions {
 
     public static void runAll() throws SQLException{
         equipasTem2ElmMin();
-        System.out.println("'equipas'");
+        System.out.println("Restriction: Teams Have a Minimum of 2 Elements");
         checkDatas();
-        System.out.println("'datas'");
+        System.out.println("Restriction: A Product Can't Have a Comercial Value Before Being Aquaried");
         checkValcusto();
-        System.out.println("'valcusto'");
+        System.out.println("Restriction: Interventions Costs May Not Surpass The Comercial Cost of an Active Asset");
         checkDtfim();
-        System.out.println("'dtfim'");
+        System.out.println("Restriction: Active Interventions Can't Have a End Date");
         activosPaiFilho();
-        System.out.println("'paiFilho'");
+        System.out.println("Restriction: Asset Parenting Types Must Be Respected");
         checkGerirNaoIntervir();
-        System.out.println("'gerirInt'");
+        System.out.println("Restriction: The Asset Manager Can't Be Part of the Team That Makes an Intervention on the Asset");
     }
 
     public static void equipasTem2ElmMin() throws SQLException{
