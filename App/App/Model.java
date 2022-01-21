@@ -383,7 +383,6 @@ public class Model {
             rs_dtaqui = ps_dtaquisicao.executeQuery();
             if(!rs_dtaqui.next()) return;
             Date sqlDate = rs_dtaqui.getDate("dtaquisicao");
-            //System.out.println(sqlDate);
 
             ps_valComer.setString(1, id);
             ps_valComer.setDate(2, sqlDate);
@@ -398,7 +397,7 @@ public class Model {
 
             int custoTotal = valorComercial + valorIntervencoes;
 
-            System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + "€");
+            System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + " euros");
         }
 
         catch(SQLException err){
