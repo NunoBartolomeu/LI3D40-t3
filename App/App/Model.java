@@ -97,7 +97,7 @@ public class Model {
        }
     }
 
-    //Inserts a new Asset to the database
+    //Inserir um novo activo
     public static void inserirAtivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -200,7 +200,7 @@ public class Model {
        }
     }
 
-    //Switches teams for 2 people
+    //Substituir um elemento de uma equipa
     public static void substituirEquipa() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -294,7 +294,7 @@ public class Model {
        }
     }
 
-    //Switches the state of an Asset to 0
+    //Colocar um activo fora de serviço
     public static void desativarAtivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -345,7 +345,7 @@ public class Model {
        }
     }
 
-    //Calculates de cost of an Asset
+    //Calcular o custo total de um ativo
     public static void custoDeUmActivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -421,6 +421,7 @@ public class Model {
        }
     }
 
+    //Lista as pessoas que estão a realizar a intervenção ou que gerem um activo
     public static void pessoasIntervencao() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -478,6 +479,7 @@ public class Model {
        }
     }
 
+    //Lista os ativos que estão ser intervidos ou geridos por uma pessoa
     public static void ativosGeridosIntervidos() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -540,6 +542,7 @@ public class Model {
        }
     }
 
+    //Lista todos os responsáveis de equipa que são (ou foram) gestores de pelo menos um activo
     public static void responsaveisGestores() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -594,6 +597,7 @@ public class Model {
        }
     }
 
+    //Lista todas as intervenções programadas para daqui intervalo de tempo
     public static void intervencoesProg() throws SQLException{
         //Connection
         Connection conn = getCon();
