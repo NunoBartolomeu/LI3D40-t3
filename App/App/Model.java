@@ -355,9 +355,6 @@ public class Model {
         PreparedStatement ps_dtaquisicao = conn.prepareStatement(query_dtaquisicao);
         PreparedStatement ps_valComer = conn.prepareStatement(query_valComer);
         PreparedStatement ps_valInter = conn.prepareStatement(query_valorInter);
-        
-        //ResultSet
-        ResultSet rs = null;
 
         //Scanner
         Scanner in = new Scanner(System.in);            
@@ -376,23 +373,26 @@ public class Model {
             
             ResultSet dtaqui = ps_dtaquisicao.executeQuery();
             if(!dtaqui.next()) return;
+            System.out.println("1");
             java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
-            //System.out.println(sqlDate);
 
             ps_valComer.setString(1, id);
             ps_valComer.setDate(2, sqlDate);
             ResultSet valorC = ps_valComer.executeQuery();
+            System.out.println(ps_valComer);
             if(!valorC.next()) return;
+            System.out.println("2");
             int valorComercial = valorC.getInt("valor");
 
             ps_valInter.setString(1, id);
             ResultSet valorI = ps_valInter.executeQuery();
             if(!valorI.next()) return;
+            System.out.println("3");
             int valorIntervencoes = valorI.getInt("valI");
 
             int custoTotal = valorComercial + valorIntervencoes;
 
-            System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + "€");
+            System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + " euros");
         }
 
         catch(SQLException err){
@@ -401,9 +401,6 @@ public class Model {
         }
 
         finally{
-            //Close Result Set
-            if (rs != null) rs.close();
-
             //Close all Prepared Statements
             if (ps_dtaquisicao != null) ps_dtaquisicao.close();
 
