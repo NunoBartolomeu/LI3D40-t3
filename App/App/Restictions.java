@@ -58,7 +58,7 @@ public class Restictions {
 
             while(rs.next()) {
                 if(last) break;
-                System.out.println(rs.getInt("codigo"));
+
                 int count=0;
 
                 while(rs2.getInt("equipa") == rs.getInt("codigo")) {
@@ -68,7 +68,7 @@ public class Restictions {
                         break;
                     } 
                 }
-                System.out.println("count "+count);
+
                 if (count < 2) {
                     //Apagar equipa
                     PreparedStatement ps_apagarEquipa = conn.prepareStatement(query_deleteTeam);
@@ -199,9 +199,7 @@ public class Restictions {
                 if(!valorC.next()) continue;
                 int valorComercial = valorC.getInt("valor");
 
-                System.out.println("valorI");
                 ps_valInter.setString(1, id);
-                System.out.println("valorI1");
                 ResultSet valorI = ps_valInter.executeQuery();
                 if(!valorI.next()) continue;
                 int valIntervencao = valorI.getInt("valcusto");
@@ -255,7 +253,6 @@ public class Restictions {
                         PreparedStatement ps_mudarEstado = conn.prepareStatement(query_mudarEstado);
                         ps_mudarEstado.setInt(1, rs.getInt("noint"));
                         ps_mudarEstado.executeUpdate();
-                        System.out.println(ps_mudarEstado);
                     }
                 }
             }
@@ -355,8 +352,6 @@ public class Restictions {
                 //Get id and manager
                 String activo = rs.getString("id");
                 int pessoa = rs.getInt("pessoa");
-                
-                System.out.print("Activo: " + activo + " Pessoa: " + pessoa);
 
                 //Get team
                 PreparedStatement ps_pessoa = conn.prepareStatement(query_pessoa);
@@ -364,8 +359,6 @@ public class Restictions {
                 ResultSet rs2 = ps_pessoa.executeQuery();
                 if(!rs2.next()) continue;
                 int equipa = rs2.getInt("equipa");
-
-                System.out.println(" Equipa: " + equipa);
 
                 //Get all inerventions
                 PreparedStatement ps_integerevencao = conn.prepareStatement(query_integerevencao);
@@ -375,8 +368,6 @@ public class Restictions {
                 while (rs3.next()){
                     //Get noint
                     int noint = rs3.getInt("integerervencao");
-
-                    System.out.println("noint da intervencao: " + noint);
                     
                     PreparedStatement ps_interActivo = conn.prepareStatement(query_interActivo);
                     ps_interActivo.setInt(1, noint);
