@@ -375,15 +375,18 @@ public class Model {
             ps_dtaquisicao.setString(1, id);
             
             ResultSet dtaqui = ps_dtaquisicao.executeQuery();
+            dtaqui.next();
             java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
-            System.out.println(sqlDate);
+            //System.out.println(sqlDate);
 
             ps_valComer.setDate(1, sqlDate);
             ResultSet valorC = ps_valComer.executeQuery();
+            valorC.next();
             int valorComercial = valorC.getInt("valor");
 
             ps_valInter.setString(1, id);
             ResultSet valorI = ps_valInter.executeQuery();
+            valorI.next();
             int valorIntervencoes = valorI.getInt("valI");
 
             int custoTotal = valorComercial + valorIntervencoes;

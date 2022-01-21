@@ -16,6 +16,17 @@ public class Restictions {
 
     public static void runAll() throws SQLException{
         equipasTem2ElmMin();
+        System.out.println("'equipas'");
+        checkDatas();
+        System.out.println("'datas'");
+        checkValcusto();
+        System.out.println("'valcusto'");
+        checkDtfim();
+        System.out.println("'dtfim'");
+        activosPaiFilho();
+        System.out.println("'paiFilho'");
+        checkGerirNaoIntervir();
+        System.out.println("'gerirInt'");
     }
 
     public static void equipasTem2ElmMin() throws SQLException{
@@ -80,7 +91,7 @@ public class Restictions {
         }
     }
 
-    public void checkDatas() throws SQLException{
+    public static void checkDatas() throws SQLException{
         //Connection
         Connection conn = getCon();
 
@@ -132,7 +143,7 @@ public class Restictions {
         }
     }
 
-    public void checkValcusto() throws SQLException{
+    public static void checkValcusto() throws SQLException{
         //Connection
         Connection conn = getCon();
 
@@ -164,14 +175,17 @@ public class Restictions {
                 
                 ps_dtaquisicao.setString(1, id);
                 ResultSet dtaqui = ps_dtaquisicao.executeQuery();
+                dtaqui.next();
                 java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
 
                 ps_valComer.setDate(1, sqlDate);
                 ResultSet valorC = ps_valComer.executeQuery();
+                valorC.next();
                 int valorComercial = valorC.getInt("valor");
 
                 ps_valInter.setString(1, id);
                 ResultSet valorI = ps_valInter.executeQuery();
+                valorI.next();
                 int valIntervencao = valorI.getInt("valcusto");
 
                 if(valIntervencao < valorComercial){
@@ -198,7 +212,7 @@ public class Restictions {
         }
     }
 
-    public void checkDtfim() throws SQLException{
+    public static void checkDtfim() throws SQLException{
         //Connection
         Connection conn = getCon();
 
@@ -241,14 +255,14 @@ public class Restictions {
         }
     }
 
-    public void activosPaiFilho() throws SQLException{
+    public static void activosPaiFilho() throws SQLException{
         //Connection
         Connection conn = getCon();
 
         //Querys
         final String query_activos = "select * from activo;"; //1º pegar todos os ativos
-        final String query_activoPai = "select * from activo where id=?);";
-        final String query_updtA = "update activo set tipo=? where id=? )";
+        final String query_activoPai = "select * from activo where id=?;";
+        final String query_updtA = "update activo set tipo=? where id=?";
 
          //ResultSet
          ResultSet rs = null;
@@ -277,6 +291,7 @@ public class Restictions {
 
                     ps_ativoPai.setString(1, idativoTopo);
                     ResultSet ativoP = ps_ativoPai.executeQuery();
+                    ativoP.next();
                     String tipoPai = ativoP.getString("tipo");
 
                     if(tipoPai != rs.getString("tipo")){
@@ -302,12 +317,12 @@ public class Restictions {
         }
     }
 
-    public void checkGerirNaoIntervir() throws SQLException{        
+    public static void checkGerirNaoIntervir() throws SQLException{        
         //Connection
         Connection conn = getCon();
 
         //Querys
-        final String query_activos = "select * from activos;";
+        final String query_activos = "select * from activo;";
         final String query_pessoa = "select * from pessoa where id=?;";
         final String query_integerevencao = "select * from inter_equipa where equipa=?;";
         final String query_interActivo = "select * from intervencao where noint=?;";
