@@ -169,13 +169,14 @@ public class Model {
             in.nextLine();
             ps_NovoActivo.setInt(11, pessoa);
 
-            System.out.print(ps_NovoActivo);
+            System.out.println(ps_NovoActivo);
             
             //Execute Querys
             ps_NovoActivo.executeUpdate();
 
             //Show Results
             printResults(pstmt2.executeQuery());
+            System.out.println("Inserido com sucesso");
         }
 
         catch(SQLException err){
@@ -321,8 +322,7 @@ public class Model {
 
             //Execute Querys
             ps_EstadoPara0.executeUpdate();
-
-            //Show Results
+            System.out.println("Ativo desativado com sucesso");
         }
 
         catch(SQLException err){
