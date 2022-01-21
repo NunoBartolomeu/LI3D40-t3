@@ -22,7 +22,8 @@ class App {
 		pessoasInt,
 		ativosGI,
 		responsibleG,
-		programmedInt
+		programmedInt, 
+		restricoes,
 	}
 
 	private static App __instance = null;
@@ -33,6 +34,7 @@ class App {
 	
 	private App() {
 		__dbMethods = new HashMap<Option,DbWorker>();
+		__dbMethods.put(Option.restricoes, new DbWorker() {public void doWork() throws SQLException {Model.restricoes();}});
 		__dbMethods.put(Option.insertAtivo, new DbWorker() {public void doWork() throws SQLException {Model.inserirAtivo();}});
 		__dbMethods.put(Option.subsEquipa, new DbWorker() {public void doWork() throws SQLException {Model.substituirEquipa();}});
 		__dbMethods.put(Option.deactivateAtivo, new DbWorker() {public void doWork() throws SQLException {Model.desativarAtivo();}});
@@ -89,6 +91,7 @@ class App {
 		Login ();
 		Option userInput = Option.Unknown;
 		do {
+			__dbMethods.get(Option.restricoes).doWork();
 			clearConsole();
 			userInput = DisplayMenu();
 			clearConsole();		  	

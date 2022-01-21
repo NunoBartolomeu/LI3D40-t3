@@ -7,11 +7,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
-import Classes.Pessoa;
 
 public class Restictions {
     
@@ -19,14 +14,20 @@ public class Restictions {
         return DriverManager.getConnection(App.getInstance().getConnectionString());
     }
 
-    public static void main(String[] args){
+    public static void runAll() throws SQLException{
+        equipasTem2ElmMin();
+    }
+
+    public static void equipasTem2ElmMin() throws SQLException{
         //Connection
         Connection conn = getCon();
-                
+        
         //Querys
         final String query_equipasOrdenadas = "select * from equipa order by codigo;";
         final String query_pessoasOrdenadas = "select * from pessoa order by equipa;";
-        
+        final String query_deleteTeam = "delete from equipa where codigo = ?";
+        final String query_teamToNull = "update pessoa set equipa = null where equipa = ?";
+
         //Prepared Statements
         Statement s_equipas = conn.createStatement();
         Statement s_pessoas = conn.createStatement();
@@ -38,15 +39,31 @@ public class Restictions {
         try { 
             //Get people           
             rs = s_equipas.executeQuery(query_equipasOrdenadas);
-            s_pessoas.executeQuery(query_pessoasOrdenadas);
+            rs2 = s_pessoas.executeQuery(query_pessoasOrdenadas);
+            rs2.next();
 
-            //Key team, value num of team members
-            Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-            while (rs.next()){ map.put(rs.getInt("codigo"), 0); }
+            while(rs.next()) {
+                System.out.println(rs.getInt("codigo"));
+                int count=0;
 
-            while (rs2.next()){ 
-                map.put( rs2.getInt("equipa"), map.get(rs2.getInt("equipa"))+1 );
+                while(rs2.getInt("equipa") == rs.getInt("codigo")) {
+                    count++;
+                    if(!rs2.next()) break;
+                }
+                if (count < 2) {
+                    //Apagar equipa
+                    PreparedStatement ps_apagarEquipa = conn.prepareStatement(query_deleteTeam);
+                    ps_apagarEquipa.setInt(1, rs.getInt("codigo"));
+                    ps_apagarEquipa.executeUpdate();
+                
+                    if (count != 0) { 
+                        PreparedStatement ps_teamToNull = conn.prepareStatement(query_teamToNull);
+                        ps_teamToNull.setInt(1, rs.getInt("codigo"));
+                        ps_teamToNull.executeUpdate(); 
+                    }
+                }
             }
+
         }
 
         catch(SQLException err){
@@ -58,20 +75,69 @@ public class Restictions {
             //Close Result Set
             if (rs != null) rs.close();
 
-            //Close all Prepared Statements
-            if (ps_dtaquisicao != null) ps_dtaquisicao.close();
-
             //Close connection
             if (conn != null) conn.close();
         }
     }
 
-    public void equipasTem2ElmMin(){
+    public void checkDatas() throws SQLException{
+        //Connection
+        Connection conn = getCon();
 
-    }
+        //Querys
+        final String query_equipasOrdenadas = "select * from equipa order by codigo;";
+        final String query_pessoasOrdenadas = "select * from pessoa order by equipa;";
+        final String query_deleteTeam = "delete from equipa where codigo = ?";
+        final String query_teamToNull = "update pessoa set equipa = null where equipa = ?";
 
-    public void dtvcomercialMenorQueDtaquisicao(){
+        //Prepared Statements
+        Statement s_equipas = conn.createStatement();
+        Statement s_pessoas = conn.createStatement();
+        
+        //ResultSet
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+    
+        try { 
+            //Get people           
+            rs = s_equipas.executeQuery(query_equipasOrdenadas);
+            rs2 = s_pessoas.executeQuery(query_pessoasOrdenadas);
+            rs2.next();
 
+            while(rs.next()) {
+                int count=0;
+                while(rs2.getInt("equipa") == rs.getInt("codigo")) {
+                    count++;
+                    if(!rs2.next()) break;
+                }
+                if (count < 2) {
+                    //Apagar equipa
+                    PreparedStatement ps_apagarEquipa = conn.prepareStatement(query_deleteTeam);
+                    ps_apagarEquipa.setInt(1, rs.getInt("codigo"));
+                    ps_apagarEquipa.executeUpdate();
+                
+                    if (count != 0) { 
+                        PreparedStatement ps_teamToNull = conn.prepareStatement(query_teamToNull);
+                        ps_teamToNull.setInt(1, rs.getInt("codigo"));
+                        ps_teamToNull.executeUpdate(); 
+                    }
+                }
+            }
+
+        }
+
+        catch(SQLException err){
+            System.out.println("Error detected: ");
+            System.out.println(err);
+        }
+
+        finally{
+            //Close Result Set
+            if (rs != null) rs.close();
+
+            //Close connection
+            if (conn != null) conn.close();
+        }
     }
 
     public void checkValcusto(){

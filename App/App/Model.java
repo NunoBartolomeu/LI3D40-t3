@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Model {
+    public static void restricoes() throws SQLException {
+        Restictions.runAll();
+    }
     
     public static void printResults(ResultSet rs) throws SQLException {
         final int TAB_SIZE = 8;
