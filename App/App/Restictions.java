@@ -132,8 +132,70 @@ public class Restictions {
         }
     }
 
-    public void checkValcusto() {
+    public void checkValcusto() throws SQLException{
+        //Connection
+        Connection conn = getCon();
 
+        //Querys
+        final String query_activos = "select * from activo;";
+        final String query_dtaquisicao = "select dtaquisicao from activo where id=?;";
+        final String query_valComer = "select valor from vcomercial where activo=? and dtvcomercial=?;";
+        final String query_valorInter = "select valcusto from intervencao where activo=?;";
+        final String query_updtState = "update activo set estado = b'0' where id=?;";
+        final String query_updtDtfim = "update intervencao set estado = 'concluido' and dtfim = CURRENT_DATE where id = ?;";
+
+        //Prepared Statements
+        PreparedStatement ps_ativos = conn.prepareStatement(query_activos);
+        PreparedStatement ps_dtaquisicao = conn.prepareStatement(query_dtaquisicao);
+        PreparedStatement ps_valComer = conn.prepareStatement(query_valComer);
+        PreparedStatement ps_valInter = conn.prepareStatement(query_valorInter); 
+        PreparedStatement ps_updtState = conn.prepareStatement(query_updtState); 
+        PreparedStatement ps_updtDtfim = conn.prepareStatement(query_updtDtfim);   
+        
+        //ResultSet
+        ResultSet rs = null;
+            
+        try {
+
+            rs = ps_ativos.executeQuery();
+
+            while(rs.next()) {
+                String id = rs.getString("id");
+                
+                ps_dtaquisicao.setString(1, id);
+                ResultSet dtaqui = ps_dtaquisicao.executeQuery();
+                java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
+
+                ps_valComer.setDate(1, sqlDate);
+                ResultSet valorC = ps_valComer.executeQuery();
+                int valorComercial = valorC.getInt("valor");
+
+                ps_valInter.setString(1, id);
+                ResultSet valorI = ps_valInter.executeQuery();
+                int valIntervencao = valorI.getInt("valcusto");
+
+                if(valIntervencao < valorComercial){
+                    ps_updtState.setString(1, id);
+                    ps_updtState.executeUpdate();
+                    
+                    ps_updtDtfim.setString(1, id);
+                    ps_updtDtfim.executeUpdate();
+                }
+            }
+        }
+
+        catch(SQLException err){
+            System.out.println("Error detected: ");
+            System.out.println(err);
+        }
+
+        finally{
+            //Close Result Set
+            if (rs != null) rs.close();
+
+            //Close connection
+            if (conn != null) conn.close();
+        }
     }
 
     public void checkDtfim() throws SQLException{
