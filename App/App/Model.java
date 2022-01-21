@@ -1,6 +1,7 @@
 package App.App;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +44,7 @@ public class Model {
         return DriverManager.getConnection(App.getInstance().getConnectionString());
     }
 
+    //Default function only used to make standerized functions
     public static void defaulter() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -95,6 +97,7 @@ public class Model {
        }
     }
 
+    //Inserts a new Asset to the database
     public static void inserirAtivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -106,7 +109,7 @@ public class Model {
 
         //Prepared Statements
         PreparedStatement ps_NovoActivo = conn.prepareStatement(query_NovoActivo);
-        PreparedStatement pstmt2 = conn.prepareStatement(result);
+        PreparedStatement ps_result = conn.prepareStatement(result);
         
         //ResultSet
         ResultSet rs = null;
@@ -175,7 +178,7 @@ public class Model {
             ps_NovoActivo.executeUpdate();
 
             //Show Results
-            printResults(pstmt2.executeQuery());
+            printResults(ps_result.executeQuery());
             System.out.println("Inserido com sucesso");
         }
 
@@ -190,12 +193,14 @@ public class Model {
 
             //Close all Prepared Statements
             if (ps_NovoActivo != null) ps_NovoActivo.close();
+            if (ps_result != null) ps_result.close();
 
             //Close connection
             if (conn != null) conn.close();
        }
     }
 
+    //Switches teams for 2 people
     public static void substituirEquipa() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -278,13 +283,18 @@ public class Model {
             if (rs2 != null) rs2.close();
  
             //Close all Prepared Statements
+            if (ps_id1 != null) ps_id1.close();
+            if (ps_id2 != null) ps_id2.close();
+            if (ps_updateSubstituir != null) ps_updateSubstituir.close();
             if (ps_updateSubstituta != null) ps_updateSubstituta.close();
+            if (ps_pessoas != null) ps_pessoas.close();
 
             //Close connection
             if (conn != null) conn.close();
        }
     }
 
+    //Switches the state of an Asset to 0
     public static void desativarAtivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -294,7 +304,6 @@ public class Model {
 
         //Prepared Statements
         PreparedStatement ps_EstadoPara0 = conn.prepareStatement(q_EstadoPara0);
-        PreparedStatement ps_teste1 = conn.prepareStatement(q_EstadoPara0);
         
         //ResultSet
         ResultSet rs = null;
@@ -309,12 +318,6 @@ public class Model {
             2 - Register Answer
             3 - Add to Prepared Statement
             */
-            
-            System.out.println(ps_teste1);
-            ps_teste1.setString(1, "d6548");
-            System.out.println(ps_teste1);
-
-            ps_teste1.executeUpdate();
             
             System.out.print("Id do activo a desativar: ");
             String id = in.nextLine();
@@ -342,6 +345,7 @@ public class Model {
        }
     }
 
+    //Calculates de cost of an Asset
     public static void custoDeUmActivo() throws SQLException{
         //Connection
         Connection conn = getCon();
@@ -356,8 +360,10 @@ public class Model {
         PreparedStatement ps_valComer = conn.prepareStatement(query_valComer);
         PreparedStatement ps_valInter = conn.prepareStatement(query_valorInter);
         
-        //ResultSet
-        ResultSet rs = null;
+        //ResultSets
+        ResultSet rs_dtaqui = null;
+        ResultSet rs_valorC = null;
+        ResultSet rs_valorI = null;
 
         //Scanner
         Scanner in = new Scanner(System.in);            
@@ -374,21 +380,21 @@ public class Model {
             String id = in.nextLine();
             ps_dtaquisicao.setString(1, id);
             
-            ResultSet dtaqui = ps_dtaquisicao.executeQuery();
-            if(!dtaqui.next()) return;
-            java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
+            rs_dtaqui = ps_dtaquisicao.executeQuery();
+            if(!rs_dtaqui.next()) return;
+            Date sqlDate = rs_dtaqui.getDate("dtaquisicao");
             //System.out.println(sqlDate);
 
             ps_valComer.setString(1, id);
             ps_valComer.setDate(2, sqlDate);
-            ResultSet valorC = ps_valComer.executeQuery();
-            if(!valorC.next()) return;
-            int valorComercial = valorC.getInt("valor");
+            rs_valorC = ps_valComer.executeQuery();
+            if(!rs_valorC.next()) return;
+            int valorComercial = rs_valorC.getInt("valor");
 
             ps_valInter.setString(1, id);
-            ResultSet valorI = ps_valInter.executeQuery();
-            if(!valorI.next()) return;
-            int valorIntervencoes = valorI.getInt("valI");
+            rs_valorI = ps_valInter.executeQuery();
+            if(!rs_valorI.next()) return;
+            int valorIntervencoes = rs_valorI.getInt("valI");
 
             int custoTotal = valorComercial + valorIntervencoes;
 
@@ -402,10 +408,14 @@ public class Model {
 
         finally{
             //Close Result Set
-            if (rs != null) rs.close();
+            if (rs_dtaqui != null) rs_dtaqui.close();
+            if (rs_valorI != null) rs_valorI.close();
+            if (rs_valorC != null) rs_valorC.close();
 
             //Close all Prepared Statements
             if (ps_dtaquisicao != null) ps_dtaquisicao.close();
+            if (ps_valComer != null) ps_valComer.close();
+            if (ps_valInter != null) ps_valInter.close();
 
             //Close connection
             if (conn != null) conn.close();
