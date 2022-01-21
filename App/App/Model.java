@@ -192,23 +192,25 @@ public class Model {
        }
     }
 
-
     public static void substituirEquipa() throws SQLException{
         //Connection
         Connection conn = getCon();
         
         //Querys
+        final String query_getEquipa = "select equipa from pessoa where id = ?;";
         final String query_updateEquipa = "update pessoa set equipa = ? where id = ?;";
-        final String query_pessoas = "select id, nome, equipa from pessoa";
+        final String query_getPessoas = "select id, nome, equipa from pessoa";
         
         //Prepared Statements
+        PreparedStatement ps_id1 = conn.prepareStatement(query_getEquipa);
+        PreparedStatement ps_id2 = conn.prepareStatement(query_getEquipa);
         PreparedStatement ps_updateSubstituir = conn.prepareStatement(query_updateEquipa);
         PreparedStatement ps_updateSubstituta = conn.prepareStatement(query_updateEquipa);
-        PreparedStatement ps_pessoas = conn.prepareStatement(query_pessoas);
-        
+        PreparedStatement ps_pessoas = conn.prepareStatement(query_getPessoas);
 
         //ResultSet
         ResultSet rs = null;
+        ResultSet rs2 = null;
 
         //Scanner
         Scanner in = new Scanner(System.in);            
@@ -221,32 +223,40 @@ public class Model {
             3 - Add to Prepared Statement
             */
 
-            System.out.print("Equipa (codigo) a receber a substituição: ");
-            int equipa = in.nextInt();
-            ps_updateSubstituir.setInt(1, equipa);
-
+            //Get the ids
             System.out.print("Id da pessoa que vai substituir: ");
             int id1 = in.nextInt();
-            ps_updateSubstituir.setInt(2, id1);
-
-            //buscar id da equipa da pessoa a substituir
-            equipa = 0;
-            ps_updateSubstituta.setInt(1, equipa);
+            in.nextLine();
+            ps_id1.setInt(1, id1);
 
             System.out.print("Id da pessoa a ser substituida: ");
             int id2 = in.nextInt();
-            ps_updateSubstituta.setInt(2, id2);
+            in.nextLine();
+            ps_id2.setInt(1, id2);
 
-            System.out.println(ps_updateSubstituta);
-            System.out.println(ps_updateSubstituir);
+            //Get the teams
+            rs = ps_id1.executeQuery();
+            rs.next();
+            int team1 = rs.getInt("equipa");
+            
+            rs2 = ps_id2.executeQuery();
+            rs2.next();
+            int team2 = rs2.getInt("equipa");
+            
+            //Fill Prepared Statements
+            ps_updateSubstituir.setInt(1, team1);
+            ps_updateSubstituir.setInt(2, id2);
+
+            ps_updateSubstituta.setInt(1, team2);
+            ps_updateSubstituta.setInt(2, id1);
 
             //Show Results before change
             System.out.println("Antes:");
             printResults(ps_pessoas.executeQuery());
 
             //Execute Querys
-            ps_updateSubstituta.executeUpdate();
             ps_updateSubstituir.executeUpdate();
+            ps_updateSubstituta.executeUpdate();
 
             //Show Results
             System.out.println("Depois:");
@@ -259,9 +269,10 @@ public class Model {
         }
 
         finally{
-            //Close Result Set
+            //Close Result Sets
             if (rs != null) rs.close();
-
+            if (rs2 != null) rs2.close();
+ 
             //Close all Prepared Statements
             if (ps_updateSubstituta != null) ps_updateSubstituta.close();
 
