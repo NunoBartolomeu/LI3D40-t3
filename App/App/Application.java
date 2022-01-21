@@ -34,13 +34,13 @@ class App {
 	private App() {
 		__dbMethods = new HashMap<Option,DbWorker>();
 		__dbMethods.put(Option.insertAtivo, new DbWorker() {public void doWork() throws SQLException {Model.inserirAtivo();}});
-		__dbMethods.put(Option.subsEquipa, new DbWorker() {public void doWork() {Model.substituirEquipa();}});
+		__dbMethods.put(Option.subsEquipa, new DbWorker() {public void doWork() throws SQLException {Model.substituirEquipa();}});
 		__dbMethods.put(Option.deactivateAtivo, new DbWorker() {public void doWork() throws SQLException {Model.desativarAtivo();}});
-		__dbMethods.put(Option.costAtivo, new DbWorker() {public void doWork() {Model.custoDeUmActivo();}});
-		__dbMethods.put(Option.pessoasInt, new DbWorker() {public void doWork() {Model.pessoasIntervencao();}});
-		__dbMethods.put(Option.ativosGI, new DbWorker() {public void doWork() {Model.ativosGeridosIntervidos();}});
-		__dbMethods.put(Option.responsibleG, new DbWorker() {public void doWork() {Model.responsaveisGestores();}});
-		__dbMethods.put(Option.programmedInt, new DbWorker() {public void doWork() {Model.intervencoesProg();}});
+		__dbMethods.put(Option.costAtivo, new DbWorker() {public void doWork() throws SQLException {Model.custoDeUmActivo();}});
+		__dbMethods.put(Option.pessoasInt, new DbWorker() {public void doWork() throws SQLException {Model.pessoasIntervencao();}});
+		__dbMethods.put(Option.ativosGI, new DbWorker() {public void doWork() throws SQLException {Model.ativosGeridosIntervidos();}});
+		__dbMethods.put(Option.responsibleG, new DbWorker() {public void doWork() throws SQLException {Model.responsaveisGestores();}});
+		__dbMethods.put(Option.programmedInt, new DbWorker() {public void doWork() throws SQLException {Model.intervencoesProg();}});
 	}
 
 	public static App getInstance() {
