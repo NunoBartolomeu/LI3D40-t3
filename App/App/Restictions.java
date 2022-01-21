@@ -190,7 +190,67 @@ public class Restictions {
         //se for false fazer um novo prepareStatement (update activo set tipo=rs2.getString("tipo") where id=rs.getString("id"))
     }
 
-    public void checkGerirNaoIntervir(){
+    public void checkGerirNaoIntervir() throws SQLException{        
+        //Connection
+        Connection conn = getCon();
 
+        //Querys
+        final String query_activos = "select * from activos;";
+        final String query_pessoa = "select * from pessoa where id=?;";
+        final String query_integerevencao = "select * from inter_equipa where equipa=?;";
+        final String query_interActivo = "select * from intervencao where noint=?;";
+        final String query_deleteIntervencao = "delete from intervencao where noint=?;";
+
+        //Prepared Statements
+        Statement s_activos = conn.createStatement();
+
+        //ResultSet
+        ResultSet rs = null;
+
+        try { 
+            //Get ativos           
+            rs = s_activos.executeQuery(query_activos);
+
+            while(rs.next()) {
+                String activo = rs.getString("id");
+                int pessoa = rs.getInt("pessoa");
+
+                PreparedStatement ps_pessoa = conn.prepareStatement(query_pessoa);
+                ps_pessoa.setInt(1, pessoa);
+                ResultSet rs2 = ps_pessoa.executeQuery();
+                rs2.next();
+                int equipa = rs2.getInt("equipa");
+
+                PreparedStatement ps_integerevencao = conn.prepareStatement(query_integerevencao);
+                ps_integerevencao.setInt(1, equipa);
+                ResultSet rs3 = ps_pessoa.executeQuery();
+                
+                while (rs3.next()){
+                    int noint = rs3.getInt("noint");
+                    PreparedStatement ps_interActivo = conn.prepareStatement(query_interActivo);
+                    ps_interActivo.setInt(1, noint);
+                    ResultSet rs4 = ps_interActivo.executeQuery();
+                    rs4.next();
+                    if (activo.equals(rs4.getString("activo"))){
+                        PreparedStatement ps_deleteIntervencao = conn.prepareStatement(query_deleteIntervencao);
+                        ps_deleteIntervencao.setInt(1, noint);
+                        ps_deleteIntervencao.executeUpdate();
+                    }
+                }
+            }
+        }
+
+        catch(SQLException err){
+            System.out.println("Error detected: ");
+            System.out.println(err);
+        }
+
+        finally{
+            //Close Result Set
+            if (rs != null) rs.close();
+
+            //Close connection
+            if (conn != null) conn.close();
+        }
     }
 }
