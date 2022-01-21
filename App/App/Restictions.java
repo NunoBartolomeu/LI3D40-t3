@@ -180,7 +180,14 @@ public class Restictions {
     }
 
     public void activosPaiFilho(){
-
+        //1º pegar todos os ativos
+        //um a um ver se:
+        //2º id = idactivotopo, se for igual podes passar a frente
+        //3º se não for igual:
+        //guardar o tipo do activo que tas a ver agora (rs.getString("id")) numa variavel local para causar menos confusão
+        //fazer um preparedStatement para o activo pai (... select * from activo where id=rs.getString("idactivotopo"))
+        //comparar os dois tipos
+        //se for false fazer um novo prepareStatement (update activo set tipo=rs2.getString("tipo") where id=rs.getString("id"))
     }
 
     public void checkGerirNaoIntervir(){
