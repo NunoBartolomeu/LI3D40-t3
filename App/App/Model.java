@@ -347,9 +347,9 @@ public class Model {
         Connection conn = getCon();
         
         //Querys
-        final String query_dtaquisicao = "select * from activo where id=?;";
+        final String query_dtaquisicao = "select dtaquisicao from activo where id=?;";
         final String query_valComer = "select valor from vcomercial where activo=? and dtvcomercial=?;";
-        final String query_valorInter = "select valcusto from intervencao where activo=? and dtvcomercial=?;";
+        final String query_valorInter = "select sum (valcusto) as valI from intervencao where activo=?;";
 
         //Prepared Statements
         PreparedStatement ps_dtaquisicao = conn.prepareStatement(query_dtaquisicao);
@@ -374,27 +374,21 @@ public class Model {
             String id = in.nextLine();
             ps_dtaquisicao.setString(1, id);
             
+            ResultSet dtaqui = ps_dtaquisicao.executeQuery();
+            java.sql.Date sqlDate = dtaqui.getDate("dtaquisicao");
+            System.out.println(sqlDate);
 
-            ps_valComer.setString(1, id);
-            String dtvComercial = in.nextLine();
-            ps_valComer.setDate(2, java.sql.Date.valueOf(dtvComercial));
-            int valorComercial = ps_valComer.executeQuery().getInt("valor");
-            
-            
+            ps_valComer.setDate(1, sqlDate);
+            ResultSet valorC = ps_valComer.executeQuery();
+            int valorComercial = valorC.getInt("valor");
+
             ps_valInter.setString(1, id);
-            rs = ps_valInter.executeQuery(); 
-            int valorIntervencoes = 0;
-            while (rs.next()) {
-                valorIntervencoes += rs.getInt("valcusto");
-            }
-            int total = valorComercial + valorIntervencoes;
-            System.out.println("O activo tem um valor de: " + total + "€");
-            
-            //Execute Querys
-            ps_dtaquisicao.executeUpdate();
+            ResultSet valorI = ps_valInter.executeQuery();
+            int valorIntervencoes = valorI.getInt("valI");
 
-            //Show Results
-            printResults(ps_dtaquisicao.executeQuery());
+            int custoTotal = valorComercial + valorIntervencoes;
+
+            System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + "€");
         }
 
         catch(SQLException err){
