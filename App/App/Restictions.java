@@ -125,6 +125,8 @@ public class Restictions {
             //Get ativos           
             rs = s_activos.executeQuery(query_activos);
 
+            conn.setAutoCommit(false);
+
             while(rs.next()) {
                 String id = rs.getString("id");
                 Date dtaquisicao = rs.getDate("dtaquisicao");
@@ -141,6 +143,7 @@ public class Restictions {
                         ps_deleteVcomercial.executeUpdate();
                     }
                 }
+                conn.commit();
             }
         }
 
@@ -150,6 +153,8 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -185,6 +190,8 @@ public class Restictions {
 
             rs = ps_ativos.executeQuery();
 
+            conn.setAutoCommit(false);
+
             while(rs.next()) {
                 String id = rs.getString("id");
                 
@@ -213,6 +220,7 @@ public class Restictions {
                     ps_updtDtfim.executeUpdate();
                 }
             }
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -221,6 +229,8 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -247,6 +257,8 @@ public class Restictions {
             //Get intervencoes         
             rs = s_intervencao.executeQuery(query_intervencao);
 
+            conn.setAutoCommit(false);
+
             while(rs.next()) {
                 if (rs.getDate("dtfim") != null) {
                     if (!rs.getString("estado").equals("concluido")) {                       
@@ -256,6 +268,7 @@ public class Restictions {
                     }
                 }
             }
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -264,6 +277,8 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -292,6 +307,8 @@ public class Restictions {
 
             rs = ps_ativos.executeQuery();
 
+            conn.setAutoCommit(false);
+
             while(rs.next()) {
 
                 String id = rs.getString("id");
@@ -311,6 +328,7 @@ public class Restictions {
                     }
                 }
             }
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -319,6 +337,8 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -347,6 +367,8 @@ public class Restictions {
         try { 
             //Get ativos           
             rs = s_activos.executeQuery(query_activos);
+
+            conn.setAutoCommit(false);
 
             while(rs.next()) {
                 //Get id and manager
@@ -381,6 +403,7 @@ public class Restictions {
                     }
                 }
             }
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -389,6 +412,8 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
