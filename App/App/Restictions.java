@@ -168,7 +168,7 @@ public class Restictions {
         final String query_valComer = "select valor from vcomercial where activo=? and dtvcomercial=?;";
         final String query_valorInter = "select valcusto from intervencao where activo=?;";
         final String query_updtState = "update activo set estado = b'0' where id=?;";
-        final String query_updtDtfim = "update intervencao set estado = 'concluido' and dtfim = CURRENT_DATE where id = ?;";  
+        final String query_updtDtfim = "update intervencao set estado = 'concluido' where activo = ?;" + "update intervencao set dtfim = CURRENT_DATE where activo = ?;";  
         
         //ResultSet
         ResultSet rs = null;
@@ -211,6 +211,7 @@ public class Restictions {
                     ps_updtState.executeUpdate();
                     
                     ps_updtDtfim.setString(1, id);
+                    ps_updtDtfim.setString(2, id);
                     ps_updtDtfim.executeUpdate();
                 }
             }
