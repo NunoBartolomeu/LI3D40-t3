@@ -62,6 +62,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -78,6 +79,7 @@ public class Model {
 
             //Show Results
             printResults(ps_X.executeQuery());
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -118,6 +120,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -180,6 +183,7 @@ public class Model {
             //Show Results
             printResults(ps_result.executeQuery());
             System.out.println("Inserido com sucesso");
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -188,6 +192,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -225,6 +230,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -270,6 +276,7 @@ public class Model {
             //Show Results
             System.out.println("Depois:");
             printResults(ps_pessoas.executeQuery());
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -278,6 +285,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Sets
             if (rs != null) rs.close();
             if (rs2 != null) rs2.close();
@@ -312,6 +320,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -326,6 +335,7 @@ public class Model {
             //Execute Querys
             ps_EstadoPara0.executeUpdate();
             System.out.println("Ativo desativado com sucesso");
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -334,6 +344,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -369,6 +380,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -398,6 +410,7 @@ public class Model {
             int custoTotal = valorComercial + valorIntervencoes;
 
             System.out.println("Custo total do ativo " + id + " = Valor comercial na data de aquisição (" + valorComercial + ") + Valor das intervenções (" + valorIntervencoes + ") = " + custoTotal + " euros");
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -406,6 +419,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Set
             if (rs_dtaqui != null) rs_dtaqui.close();
             if (rs_valorI != null) rs_valorI.close();
@@ -445,6 +459,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -460,6 +475,7 @@ public class Model {
 
             //Show Results
             printResults(ps_pessInter.executeQuery());
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -468,6 +484,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -510,6 +527,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -523,6 +541,7 @@ public class Model {
 
             //Show Results
             printResults(ps_ativosGI.executeQuery());
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -531,6 +550,7 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
             //Close Result Set
             if (rs != null) rs.close();
 
@@ -617,6 +637,7 @@ public class Model {
         Scanner in = new Scanner(System.in);            
             
         try {
+            conn.setAutoCommit(false);
             /*
                 User Input
             1 - Ask Question
@@ -634,6 +655,7 @@ public class Model {
 
             //Show Results
             printResults(ps_InterProg.executeQuery());
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -642,6 +664,8 @@ public class Model {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
             //Close Result Set
             if (rs != null) rs.close();
 
