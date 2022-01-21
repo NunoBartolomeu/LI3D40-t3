@@ -53,6 +53,8 @@ public class Restictions {
             rs2 = s_pessoas.executeQuery(query_pessoasOrdenadas);
             rs2.next();
 
+            conn.setAutoCommit(false);
+
             while(rs.next()) {
                 System.out.println(rs.getInt("codigo"));
                 int count=0;
@@ -66,15 +68,15 @@ public class Restictions {
                     PreparedStatement ps_apagarEquipa = conn.prepareStatement(query_deleteTeam);
                     ps_apagarEquipa.setInt(1, rs.getInt("codigo"));
                     ps_apagarEquipa.executeUpdate();
-                
+
                     if (count != 0) { 
                         PreparedStatement ps_teamToNull = conn.prepareStatement(query_teamToNull);
                         ps_teamToNull.setInt(1, rs.getInt("codigo"));
-                        ps_teamToNull.executeUpdate(); 
+                        ps_teamToNull.executeUpdate();
                     }
                 }
             }
-
+            conn.commit();
         }
 
         catch(SQLException err){
@@ -83,8 +85,15 @@ public class Restictions {
         }
 
         finally{
+            conn.setAutoCommit(true);
+
+            //Close statemenes
+            if(s_equipas != null) s_equipas.close();
+            if(s_pessoas != null) s_pessoas.close();
+
             //Close Result Set
             if (rs != null) rs.close();
+            if (rs2 != null) rs.close();
 
             //Close connection
             if (conn != null) conn.close();
@@ -264,16 +273,9 @@ public class Restictions {
         final String query_activoPai = "select * from activo where id=?;";
         final String query_updtA = "update activo set tipo=? where id=?";
 
-         //ResultSet
-         ResultSet rs = null;
+        //ResultSet
+        ResultSet rs = null;
 
-        //um a um ver se:
-        //2º id = idactivotopo, se for igual podes passar a frente
-        //3º se não for igual:
-        //guardar o tipo do activo que tas a ver agora (rs.getString("id")) numa variavel local para causar menos confusão
-        //fazer um preparedStatement para o activo pai (... select * from activo where id=rs.getString("idactivotopo"))
-        //comparar os dois tipos
-        //se for false fazer um novo prepareStatement (update activo set tipo=rs2.getString("tipo") where id=rs.getString("id"))
         try {
             //Prepared Statements
             PreparedStatement ps_ativos = conn.prepareStatement(query_activos);
