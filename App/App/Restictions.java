@@ -339,29 +339,41 @@ public class Restictions {
             rs = s_activos.executeQuery(query_activos);
 
             while(rs.next()) {
+                //Get id and manager
                 String activo = rs.getString("id");
                 int pessoa = rs.getInt("pessoa");
+                
+                System.out.print("Activo: " + activo + " Pessoa: " + pessoa);
 
+                //Get team
                 PreparedStatement ps_pessoa = conn.prepareStatement(query_pessoa);
                 ps_pessoa.setInt(1, pessoa);
                 ResultSet rs2 = ps_pessoa.executeQuery();
                 rs2.next();
                 int equipa = rs2.getInt("equipa");
 
+                System.out.println(" Equipa: " + equipa);
+
+                //Get all inerventions
                 PreparedStatement ps_integerevencao = conn.prepareStatement(query_integerevencao);
                 ps_integerevencao.setInt(1, equipa);
                 ResultSet rs3 = ps_pessoa.executeQuery();
                 
                 while (rs3.next()){
+                    //Get noint
                     int noint = rs3.getInt("noint");
+
+                    System.out.println("noint da intervencao: " + noint);
+                    
                     PreparedStatement ps_interActivo = conn.prepareStatement(query_interActivo);
                     ps_interActivo.setInt(1, noint);
                     ResultSet rs4 = ps_interActivo.executeQuery();
-                    rs4.next();
-                    if (activo.equals(rs4.getString("activo"))){
-                        PreparedStatement ps_deleteIntervencao = conn.prepareStatement(query_deleteIntervencao);
-                        ps_deleteIntervencao.setInt(1, noint);
-                        ps_deleteIntervencao.executeUpdate();
+                    if(rs4.next()){
+                        if (activo.equals(rs4.getString("activo"))){
+                            PreparedStatement ps_deleteIntervencao = conn.prepareStatement(query_deleteIntervencao);
+                            ps_deleteIntervencao.setInt(1, noint);
+                            ps_deleteIntervencao.executeUpdate();
+                    }
                     }
                 }
             }
