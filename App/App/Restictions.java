@@ -22,11 +22,11 @@ public class Restictions {
         checkValcusto();
         System.out.println("Restrição: Custos De Intervenção Nao Podem Ser Superiores Ao Custo Comercial De Um Activo Ativo");
         checkDtfim();
-        System.out.println("Restriction: Active Interventions Can't Have a End Date");
+        System.out.println("Restrição: Intervencoes Ativas Nao Podem Ter Uma Data de Fim");
         activosPaiFilho();
-        System.out.println("Restriction: Asset Parenting Types Must Be Respected");
+        System.out.println("Restrição: A Hierarquia Entre Activos Tem De Ser Respeitada");
         checkGerirNaoIntervir();
-        System.out.println("Restriction: The Asset Manager Can't Be Part of the Team That Makes an Intervention on the Asset");
+        System.out.println("Restrição: O Gerente do Activo Nao Pode Pertencer a Equipa que Faz A Intervencao Nesse Activo");
     }
 
     public static void equipasTem2ElmMin() throws SQLException{
