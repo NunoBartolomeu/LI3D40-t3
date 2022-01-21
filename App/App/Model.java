@@ -97,10 +97,10 @@ public class Model {
         Connection conn = getCon();
         
         //Querys
-        final String query_NovoActivo = "insert into ACTIVO (id, nome, estado, dtaquisicao, modelo, marca, localizacao, idactivotopo, tipo, empresa, pessoa)" + 
-                                        "values (?, ?, b?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        final String query_NovoActivo = "insert into ACTIVO (id, nome, estado, dtaquisicao, modelo, marca, localizacao, idactivotopo, tipo, empresa, pessoa) " + 
+                                        "values (?, ?, ?::bit, ?, ?, ?, ?, ?, ?, ?, ?);";
         final String result = "select id, nome from ACTIVO;";
-        
+
         //Prepared Statements
         PreparedStatement ps_NovoActivo = conn.prepareStatement(query_NovoActivo);
         PreparedStatement pstmt2 = conn.prepareStatement(result);
@@ -129,8 +129,7 @@ public class Model {
 
             System.out.print("Inserir estado do activo: ");
             String estado = in.nextLine();
-            System.out.print(estado.charAt(0)-'0');
-            ps_NovoActivo.setInt(3, estado.charAt(0)-'0');
+            ps_NovoActivo.setString(3, estado);
 
             System.out.print("Inserir dtaquisicao do activo: ");
             String dtaquisicao = in.nextLine();
@@ -153,17 +152,21 @@ public class Model {
             ps_NovoActivo.setString(8, idactivotopo);
 
             System.out.print("Inserir tipo do activo: ");
-            String tipo = in.nextLine();
-            ps_NovoActivo.setString(9, tipo);
+            int tipo = in.nextInt();
+            in.nextLine();
+            ps_NovoActivo.setInt(9, tipo);
 
             System.out.print("Inserir empresa do activo: ");
-            String empresa = in.nextLine();
-            ps_NovoActivo.setString(10, empresa);
+            int empresa = in.nextInt();
+            in.nextLine();
+            ps_NovoActivo.setInt(10, empresa);
 
             System.out.print("Inserir pessoa do activo: ");
-            String pessoa = in.nextLine();
-            ps_NovoActivo.setString(11, pessoa);
+            int pessoa = in.nextInt();
+            in.nextLine();
+            ps_NovoActivo.setInt(11, pessoa);
 
+            System.out.print(ps_NovoActivo);
             
             //Execute Querys
             ps_NovoActivo.executeUpdate();
@@ -195,11 +198,13 @@ public class Model {
         Connection conn = getCon();
         
         //Querys
-        final String query_updateEquipa = "update pessoa set equipa = ? where id = ?; update pessoa set equipa = ? where id = ?;";
+        final String query_updateEquipa = "update pessoa set equipa = ? where id = ?;";
+        final String query_pessoas = "select id, nome, equipa from pessoa";
         
         //Prepared Statements
         PreparedStatement ps_updateSubstituir = conn.prepareStatement(query_updateEquipa);
         PreparedStatement ps_updateSubstituta = conn.prepareStatement(query_updateEquipa);
+        PreparedStatement ps_pessoas = conn.prepareStatement(query_pessoas);
         
 
         //ResultSet
@@ -224,22 +229,32 @@ public class Model {
             int id1 = in.nextInt();
             ps_updateSubstituir.setInt(2, id1);
 
-            //equipa = 0;
+            //buscar id da equipa da pessoa a substituir
+            equipa = 0;
             ps_updateSubstituta.setInt(1, equipa);
 
             System.out.print("Id da pessoa a ser substituida: ");
             int id2 = in.nextInt();
             ps_updateSubstituta.setInt(2, id2);
 
+            System.out.println(ps_updateSubstituta);
+            System.out.println(ps_updateSubstituir);
+
+            //Show Results before change
+            System.out.println("Antes:");
+            printResults(ps_pessoas.executeQuery());
+
             //Execute Querys
             ps_updateSubstituta.executeUpdate();
+            ps_updateSubstituir.executeUpdate();
 
             //Show Results
-            printResults(ps_updateSubstituta.executeQuery());
+            System.out.println("Depois:");
+            printResults(ps_pessoas.executeQuery());
         }
 
         catch(SQLException err){
-            System.out.println("Error detected: ");
+            System.out.println("\n\nError detected: ");
             System.out.println(err);
         }
 
@@ -420,8 +435,6 @@ public class Model {
             ps_pessInter.setString(1, nome);
             ps_pessInter.setString(2, nome);
 
-            //Execute Querys
-            ps_pessInter.executeUpdate();
 
             //Show Results
             printResults(ps_pessInter.executeQuery());
@@ -485,9 +498,6 @@ public class Model {
             String nome = in.nextLine();
             ps_ativosGI.setString(1, nome);
 
-            //Execute Querys
-            ps_ativosGI.executeUpdate();
-
             //Show Results
             printResults(ps_ativosGI.executeQuery());
         }
@@ -542,9 +552,6 @@ public class Model {
             3 - Add to Prepared Statement
             */
 
-            //Execute Querys
-            ps_RespGest.executeUpdate();
-
             //Show Results
             printResults(ps_RespGest.executeQuery());
         }
@@ -573,7 +580,7 @@ public class Model {
         //Querys
         final String query_InterProg = "select id, nome, descricao " +
         "from activo inner join INTERVENCAO on id = activo " +
-        "where (dtinicio > CURRENT_DATE and dtinicio < CURRENT_DATE + interval ? );";
+        "where (dtinicio > CURRENT_DATE and dtinicio < CURRENT_DATE + ?::interval );";
         
         //Prepared Statements
         PreparedStatement ps_InterProg = conn.prepareStatement(query_InterProg);
@@ -598,8 +605,7 @@ public class Model {
             String intervalo = in.nextLine();
             ps_InterProg.setString(1, intervalo);
 
-            //Execute Querys
-            ps_InterProg.executeUpdate();
+            System.out.println(ps_InterProg);
 
             //Show Results
             printResults(ps_InterProg.executeQuery());
